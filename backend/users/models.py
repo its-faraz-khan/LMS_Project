@@ -39,8 +39,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
 
-    # UET Registration number extracted from email
+    # UET Registration number extracted from email (read-only)
     registration_number = models.CharField(max_length=20, blank=True)
+    
+    # Profile customization
+    description = models.TextField(max_length=500, blank=True)
+    profile_pic = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+    social_links = models.JSONField(default=dict, blank=True) # {github: '', linkedIn: '', website: ''}
 
     objects = CustomUserManager()
 

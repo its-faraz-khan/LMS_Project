@@ -67,10 +67,37 @@ class LoginSerializer(serializers.Serializer):
         return value.lower()
 
 
+import json
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'username', 'first_name', 'last_name', 'role', 'is_verified', 'registration_number']
+        fields = [
+            'id', 'email', 'username', 'first_name', 'last_name', 
+            'role', 'is_verified', 'registration_number',
+            'description', 'profile_pic', 'social_links'
+        ]
+        read_only_fields = ['email', 'registration_number', 'role', 'is_verified']
+
+    def to_internal_value(self, data):
+        # Convert QueryDict to a regular dict to allow non-string values (like our parsed JSON dict)
+        if hasattr(data, 'dict'):
+            data = data.dict()
+        else:
+            data = data.copy() if hasattr(data, 'copy') else dict(data)
+
+        # Handle social_links if it comes as a string (from FormData)
+        if 'social_links' in data and isinstance(data['social_links'], str):
+            try:
+                data['social_links'] = json.loads(data['social_links'])
+            except (json.JSONDecodeError, TypeError):
+                pass
+        
+        # Ensure we don't try to save empty strings or 'null' strings as profile pictures
+        if 'profile_pic' in data and (not data['profile_pic'] or data['profile_pic'] == 'null'):
+            data.pop('profile_pic')
+            
+        return super().to_internal_value(data)
 
 
 class ForgotPasswordSerializer(serializers.Serializer):

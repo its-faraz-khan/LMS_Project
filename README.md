@@ -55,14 +55,7 @@ lms-project/
 
 ---
 
-### 1. PostgreSQL Setup
 
-```sql
--- Open psql or pgAdmin and run:
-CREATE DATABASE lms_db;
-CREATE USER postgres WITH PASSWORD '@Uckhan@6435';
-GRANT ALL PRIVILEGES ON DATABASE lms_db TO postgres;
-```
 
 ---
 

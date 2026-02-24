@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const API = axios.create({
   baseURL: 'http://localhost:8000/api',
-  headers: { 'Content-Type': 'application/json' },
 });
 
 // Attach JWT token to every request
@@ -21,6 +20,7 @@ export const authAPI = {
   forgotPassword: (data) => API.post('/auth/forgot-password/', data),
   resetPassword: (data) => API.post('/auth/reset-password/', data),
   me: () => API.get('/auth/me/'),
+  updateProfile: (data) => API.patch('/auth/me/', data),
 };
 
 export default API;
